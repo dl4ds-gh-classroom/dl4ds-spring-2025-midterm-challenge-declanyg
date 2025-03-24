@@ -151,8 +151,14 @@ def main():
     ############################################################################
 
     transform_train = transforms.Compose([
+        transforms.RandomCrop(32),
+        transforms.RandomHorizontalFlip(p=0.5),
+        # transforms.RandomRotation(15),
+        # transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.02),
+        # transforms.Resize((224,224)),
         transforms.ToTensor(),
-        transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761)), # Example normalization
+        # transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)) # Example normalization
+        transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))
     ])
 
     ###############
@@ -161,8 +167,9 @@ def main():
 
     # Validation and test transforms (NO augmentation)
     transform_test = transforms.Compose([
+        # transforms.Resize((224,224)),
         transforms.ToTensor(),
-        transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761)), # Example normalization
+        transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)), # Example normalization
     ])   ### TODO -- BEGIN SOLUTION
 
     ############################################################################
@@ -189,8 +196,9 @@ def main():
     ############################################################################
     #   Instantiate model and move to target device
     ############################################################################
-    model = torchvision.models.resnet18(pretrained=True)   # instantiate your model ### TODO
-    model.fc = nn.Linear(512, 100)
+    model = torchvision.models.resnext50_32x4d(pretrained=True)   # instantiate your model ### TODO
+    model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+    model.fc = nn.Linear(2048, 100)
     model = model.to(CONFIG["device"])   # move it to target device
 
     print("\nModel summary:")
@@ -213,7 +221,7 @@ def main():
     ############################################################################
     criterion = nn.CrossEntropyLoss()   ### TODO -- define loss criterion
     optimizer = optim.Adam(model.parameters(), lr=0.001)   ### TODO -- define optimizer
-    scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)  # Add a scheduler   ### TODO -- you can optionally add a LR scheduler
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10, eta_min=1e-6)  # Add a scheduler   ### TODO -- you can optionally add a LR scheduler
 
 
     # Initialize wandb
