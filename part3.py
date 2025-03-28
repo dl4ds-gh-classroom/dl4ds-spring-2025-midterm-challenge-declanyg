@@ -130,9 +130,9 @@ def main():
 
 
     CONFIG = {
-        "model": "MyModel",   # Change name when using a different model
-        "batch_size": 8, # run batch size finder to find optimal batch size
-        "learning_rate": 0.1,
+        "model": "Part3_Final_WithBatchSize",   # Change name when using a different model
+        "batch_size": 512, # run batch size finder to find optimal batch size
+        "learning_rate": 0.001,
         "epochs": 5,  # Train for longer in a real scenario
         "num_workers": 4, # Adjust based on your system
         "device": "mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu",
@@ -151,7 +151,6 @@ def main():
     ############################################################################
 
     transform_train = transforms.Compose([
-        transforms.RandomCrop(32),
         transforms.RandomHorizontalFlip(p=0.5),
         # transforms.RandomRotation(15),
         # transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.02),
@@ -185,19 +184,19 @@ def main():
     trainset, valset = torch.utils.data.random_split(trainset, [train_size, val_size])  ### TODO -- split into training and validation sets
 
     ### TODO -- define loaders and test set
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
-    valloader = torch.utils.data.DataLoader(valset, batch_size=64, shuffle=True)
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=CONFIG["batch_size"], shuffle=True)
+    valloader = torch.utils.data.DataLoader(valset, batch_size=CONFIG["batch_size"], shuffle=True)
 
     # ... (Create validation and test loaders)
     testset = torchvision.datasets.CIFAR100(root='./data', train=False,
                                             download=True, transform=transform_test)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=True)
+    testloader = torch.utils.data.DataLoader(testset, batch_size=CONFIG["batch_size"], shuffle=True)
     
     ############################################################################
     #   Instantiate model and move to target device
     ############################################################################
     model = torchvision.models.resnext50_32x4d(pretrained=True)   # instantiate your model ### TODO
-    model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+    model.conv1 = nn.Conv2d(3, 64, kernel_size=5, stride=1, padding=1, bias=False)
     model.fc = nn.Linear(2048, 100)
     model = model.to(CONFIG["device"])   # move it to target device
 
@@ -220,7 +219,7 @@ def main():
     # Loss Function, Optimizer and optional learning rate scheduler
     ############################################################################
     criterion = nn.CrossEntropyLoss()   ### TODO -- define loss criterion
-    optimizer = optim.Adam(model.parameters(), lr=0.001)   ### TODO -- define optimizer
+    optimizer = optim.Adam(model.parameters(), lr=CONFIG["learning_rate"])   ### TODO -- define optimizer
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10, eta_min=1e-6)  # Add a scheduler   ### TODO -- you can optionally add a LR scheduler
 
 
