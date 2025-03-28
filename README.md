@@ -1,6 +1,9 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/xnB1OI0j)
 # DS542 Deep Learning for Data Science -- Spring 2025 Midterm Challenge
 
+## Project Report
+The project report can be found in the project_report.pdf file or at the link[https://api.wandb.ai/links/declanyg-boston-university/dva8vh8r] it's hosted at
+
 ## Overview
 
 This repository contains the code for the midterm challenge of the course DS542 Deep Learning for Data Science.
