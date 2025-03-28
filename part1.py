@@ -22,19 +22,28 @@ class SimpleCNN(nn.Module):
     def __init__(self):
         super(SimpleCNN, self).__init__()
         # TODO - define the layers of the network you will use
-        self.conv1 = nn.Conv2d(3, 32, (5,5))
+        #Convolutional layer with input channels 3, out channels 32, and kernel size 5
+        self.conv1 = nn.Conv2d(3, 32, (5,5)) 
+        #Convolutional layer with input channels 32, out channels 64, and kernel size 5
         self.conv2 = nn.Conv2d(32, 64, (5,5))
-        self.fc1 = nn.Linear(64*5*5, 128)
+        #Fully connected layer with 1600 input neurons to coorespond with the flattened dimensions,
+        self.fc1 = nn.Linear(64*5*5, 128) 
+        #Fully connected layer with 128 input neurons and 100 output neurons to coorespond with CIFAR-100 expected number of outputs
         self.fc2 = nn.Linear(128, 100)
         
     def forward(self, x):
         # TODO - define the forward pass of the network you will use
+        #Standard Conv -> ReLu -> MaxPool pipeline. ReLu applied to output of convoluttional layer, max pooling of size 2 applied after
         x = F.max_pool2d(F.relu(self.conv1(x)), 2)
+        #Standard Conv -> ReLu -> MaxPool pipeline. ReLu applied to output of convoluttional layer, max pooling of size 2 applied after
         x = F.max_pool2d(F.relu(self.conv2(x)), 2)
 
+        #Flatten the convolutional layer so it can be fed to the fully connected layers
         x = torch.flatten(x, 1)
         
+        #Relu activation applied to fully connected layer
         x = F.relu(self.fc1(x))
+        #No activation to coorespond with the CIFAR-100 output
         x = self.fc2(x)
 
         return x
@@ -210,14 +219,17 @@ def main():
     ############################################################################
     # Loss Function, Optimizer and optional learning rate scheduler
     ############################################################################
+    #Cross entropy loss criterion
     criterion = nn.CrossEntropyLoss()   ### TODO -- define loss criterion
+    #Adam optimizer with learning rate 0.001
     optimizer = optim.Adam(model.parameters(), lr=0.001)   ### TODO -- define optimizer
+    #Scheduler that reduces the learning rate by 10% after 10 epochs. EFFECTIVELY A PLACEHOLDER
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)  # Add a scheduler   ### TODO -- you can optionally add a LR scheduler
 
 
     # Initialize wandb
-    # wandb.init(project="-sp25-ds542-challenge", config=CONFIG)
-    # wandb.watch(model)  # watch the model gradients
+    wandb.init(project="-sp25-ds542-challenge", config=CONFIG)
+    wandb.watch(model)  # watch the model gradients
 
     ############################################################################
     # --- Training Loop (Example - Students need to complete) ---
@@ -230,22 +242,22 @@ def main():
         scheduler.step()
 
         # log to WandB
-        # wandb.log({
-        #     "epoch": epoch + 1,
-        #     "train_loss": train_loss,
-        #     "train_acc": train_acc,
-        #     "val_loss": val_loss,
-        #     "val_acc": val_acc,
-        #     "lr": optimizer.param_groups[0]["lr"] # Log learning rate
-        # })
+        wandb.log({
+            "epoch": epoch + 1,
+            "train_loss": train_loss,
+            "train_acc": train_acc,
+            "val_loss": val_loss,
+            "val_acc": val_acc,
+            "lr": optimizer.param_groups[0]["lr"] # Log learning rate
+        })
 
         # Save the best model (based on validation accuracy)
         if val_acc > best_val_acc:
             best_val_acc = val_acc
             torch.save(model.state_dict(), "best_model.pth")
-            # wandb.save("best_model.pth") # Save to wandb as well
+            wandb.save("best_model.pth") # Save to wandb as well
 
-    # wandb.finish()
+    wandb.finish()
 
     ############################################################################
     # Evaluation -- shouldn't have to change the following code
@@ -258,12 +270,12 @@ def main():
     print(f"Clean CIFAR-100 Test Accuracy: {clean_accuracy:.2f}%")
 
     # --- Evaluation on OOD ---
-    # all_predictions = eval_ood.evaluate_ood_test(model, CONFIG)
+    all_predictions = eval_ood.evaluate_ood_test(model, CONFIG)
 
     # --- Create Submission File (OOD) ---
-    # submission_df_ood = eval_ood.create_ood_df(all_predictions)
-    # submission_df_ood.to_csv("submission_ood.csv", index=False)
-    # print("submission_ood.csv created successfully.")
+    submission_df_ood = eval_ood.create_ood_df(all_predictions)
+    submission_df_ood.to_csv("submission_ood.csv", index=False)
+    print("submission_ood.csv created successfully.")
 
 if __name__ == '__main__':
     main()

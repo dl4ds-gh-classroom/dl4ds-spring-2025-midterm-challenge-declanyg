@@ -195,8 +195,11 @@ def main():
     ############################################################################
     #   Instantiate model and move to target device
     ############################################################################
+    #Untrained ResNeXt50 model instantiated
     model = torchvision.models.resnext50_32x4d(pretrained=True)   # instantiate your model ### TODO
+    #First layer in the ResNeXt50 modified to have a kernel size of 5, stride of 1 and padding of 1 to better work with smaller CIFAR-100 images
     model.conv1 = nn.Conv2d(3, 64, kernel_size=5, stride=1, padding=1, bias=False)
+    #Last layer in the ResNeXt50 modified to ouput 100 values to coorespond with CIFAR-100 and OOD
     model.fc = nn.Linear(2048, 100)
     model = model.to(CONFIG["device"])   # move it to target device
 
@@ -218,8 +221,11 @@ def main():
     ############################################################################
     # Loss Function, Optimizer and optional learning rate scheduler
     ############################################################################
+    #Cross entropy loss criterion
     criterion = nn.CrossEntropyLoss()   ### TODO -- define loss criterion
+    #Adam optimizer with learning rate 0.001
     optimizer = optim.Adam(model.parameters(), lr=CONFIG["learning_rate"])   ### TODO -- define optimizer
+    #Scheduler that gradually reduces the learning rate following a cosine decay curve over 10 epochs. Minimum learning rate is 0.000001
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10, eta_min=1e-6)  # Add a scheduler   ### TODO -- you can optionally add a LR scheduler
 
 

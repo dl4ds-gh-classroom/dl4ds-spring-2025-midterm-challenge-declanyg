@@ -18,26 +18,6 @@ import json
 # for Part 3 you have the option of using a predefined, pretrained network to
 # finetune.
 ################################################################################
-# class SimpleCNN(nn.Module):
-#     def __init__(self):
-#         super(SimpleCNN, self).__init__()
-#         # TODO - define the layers of the network you will use
-#         self.conv1 = nn.Conv2d(3, 32, (5,5))
-#         self.conv2 = nn.Conv2d(32, 64, (5,5))
-#         self.fc1 = nn.Linear(64*5*5, 128)
-#         self.fc2 = nn.Linear(128, 100)
-        
-#     def forward(self, x):
-#         # TODO - define the forward pass of the network you will use
-#         x = F.max_pool2d(F.relu(self.conv1(x)), 2)
-#         x = F.max_pool2d(F.relu(self.conv2(x)), 2)
-
-#         x = torch.flatten(x, 1)
-        
-#         x = F.relu(self.fc1(x))
-#         x = self.fc2(x)
-
-#         return x
 
 ################################################################################
 # Define a one epoch training function
@@ -211,8 +191,11 @@ def main():
     ############################################################################
     # Loss Function, Optimizer and optional learning rate scheduler
     ############################################################################
+    #Cross entropy loss criterion
     criterion = nn.CrossEntropyLoss()   ### TODO -- define loss criterion
+    #Adam optimizer with learning rate 0.001
     optimizer = optim.Adam(model.parameters(), lr=0.001)   ### TODO -- define optimizer
+    #Scheduler that reduces the learning rate by 10% after 10 epochs. EFFECTIVELY A PLACEHOLDER
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)  # Add a scheduler   ### TODO -- you can optionally add a LR scheduler
 
 
