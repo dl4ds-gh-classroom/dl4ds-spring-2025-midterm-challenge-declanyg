@@ -132,7 +132,8 @@ def main():
 
     transform_train = transforms.Compose([
         transforms.ToTensor(),
-        transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761)), # Example normalization
+        #Normalization using CIFAR-100 mean and std
+        transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761)),
     ])
 
     ###############
@@ -142,7 +143,8 @@ def main():
     # Validation and test transforms (NO augmentation)
     transform_test = transforms.Compose([
         transforms.ToTensor(),
-        transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761)), # Example normalization
+        #Normalization using CIFAR-100 mean and std
+        transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761)), 
     ])   ### TODO -- BEGIN SOLUTION
 
     ############################################################################
@@ -169,7 +171,9 @@ def main():
     ############################################################################
     #   Instantiate model and move to target device
     ############################################################################
+    #Untrained ResNet18 model instantiated
     model = torchvision.models.resnet18(pretrained=False)   # instantiate your model ### TODO
+    #Last layer in the ResNet18 modified to ouput 100 values to coorespond with CIFAR-100 and OOD
     model.fc = nn.Linear(512, 100)
     model = model.to(CONFIG["device"])   # move it to target device
 

@@ -18,26 +18,6 @@ import json
 # for Part 3 you have the option of using a predefined, pretrained network to
 # finetune.
 ################################################################################
-# class SimpleCNN(nn.Module):
-#     def __init__(self):
-#         super(SimpleCNN, self).__init__()
-#         # TODO - define the layers of the network you will use
-#         self.conv1 = nn.Conv2d(3, 32, (5,5))
-#         self.conv2 = nn.Conv2d(32, 64, (5,5))
-#         self.fc1 = nn.Linear(64*5*5, 128)
-#         self.fc2 = nn.Linear(128, 100)
-        
-#     def forward(self, x):
-#         # TODO - define the forward pass of the network you will use
-#         x = F.max_pool2d(F.relu(self.conv1(x)), 2)
-#         x = F.max_pool2d(F.relu(self.conv2(x)), 2)
-
-#         x = torch.flatten(x, 1)
-        
-#         x = F.relu(self.fc1(x))
-#         x = self.fc2(x)
-
-#         return x
 
 ################################################################################
 # Define a one epoch training function
@@ -151,12 +131,10 @@ def main():
     ############################################################################
 
     transform_train = transforms.Compose([
+        #Data augmentation by randomly flipping the training image with probability 0.5
         transforms.RandomHorizontalFlip(p=0.5),
-        # transforms.RandomRotation(15),
-        # transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.02),
-        # transforms.Resize((224,224)),
         transforms.ToTensor(),
-        # transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)) # Example normalization
+        #Normalization using CIFAR-100 mean and std
         transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))
     ])
 
@@ -166,9 +144,9 @@ def main():
 
     # Validation and test transforms (NO augmentation)
     transform_test = transforms.Compose([
-        # transforms.Resize((224,224)),
         transforms.ToTensor(),
-        transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)), # Example normalization
+        #Normalization using CIFAR-100 mean and std
+        transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761)), 
     ])   ### TODO -- BEGIN SOLUTION
 
     ############################################################################
