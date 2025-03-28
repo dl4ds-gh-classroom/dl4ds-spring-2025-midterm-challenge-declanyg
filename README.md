@@ -4,6 +4,11 @@
 ## Project Report
 The project report can be found in the project_report.pdf file or at the [link](https://api.wandb.ai/links/declanyg-boston-university/dva8vh8r) it's hosted at
 
+Kaggle Username: declanyg (Declan Young)
+Part 1 Best Kaggle Accuracy: 0.22094
+Part 2 Best Kaggle Accuracy: 0.31766
+Part 3 Best Kaggle Accuracy: 0.48167
+
 ## Overview
 
 This repository contains the code for the midterm challenge of the course DS542 Deep Learning for Data Science.
