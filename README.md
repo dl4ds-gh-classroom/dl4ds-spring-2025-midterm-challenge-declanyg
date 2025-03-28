@@ -1,4 +1,13 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/xnB1OI0j)
 # DS542 Deep Learning for Data Science -- Spring 2025 Midterm Challenge
+
+## Project Report
+The project report can be found in the project_report.pdf file or at the [link](https://api.wandb.ai/links/declanyg-boston-university/dva8vh8r) it's hosted at.
+
+Kaggle Username: declanyg (Declan Young) 
+- Part 1 Best Kaggle Accuracy: 0.22094
+- Part 2 Best Kaggle Accuracy: 0.31766
+- Part 3 Best Kaggle Accuracy: 0.48167
 
 ## Overview
 
